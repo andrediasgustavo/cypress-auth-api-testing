@@ -1,0 +1,19 @@
+# Dependências do Node.js
+node_modules/
+
+# Artefatos e mídias geradas pelo Cypress durante os testes
+cypress/videos/
+cypress/screenshots/
+
+# Variáveis de ambiente locais do Cypress (boas práticas para não expor credenciais)
+cypress.env.json
+.env
+
+# Arquivos de log do npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos de sistema operacional (Mac/Windows)
+.DS_Store
+Thumbs.db

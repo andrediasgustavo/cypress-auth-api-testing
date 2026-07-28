@@ -6,17 +6,19 @@ describe('update booking', () => {
     let bookingid = ''
 
     before('Login', () => {
-        cy.request({
-            method: 'POST',
-            url: 'https://restful-booker.herokuapp.com/auth',
-            body: {
-                "username" : Cypress.env('USERNAME'),
-                "password" : Cypress.env('PASSWORD')
-            }
-        }).then((response) => {
-            expect(response.status).equal(200)
-            token = response.body.token
-        })
+        cy.env(['USERNAME', 'PASSWORD']).then(({ USERNAME, PASSWORD }) => {
+            cy.request({
+                method: 'POST',
+                url: 'https://restful-booker.herokuapp.com/auth',
+                body: {
+                    "username" : USERNAME,
+                    "password" : PASSWORD
+                }
+            }).then((response) => {
+                expect(response.status).equal(200)
+                token = response.body.token
+            })
+        })   
     })
 
     beforeEach('Create Booking', () => {

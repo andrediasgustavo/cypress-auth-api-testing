@@ -1,4 +1,3 @@
-```markdown
 # Cypress API Testing
 
 This project contains an automated API testing suite built with Cypress. It validates the endpoints of the Restful-Booker API, covering the complete lifecycle of a booking system including authentication, creation, retrieval, modification, and deletion.

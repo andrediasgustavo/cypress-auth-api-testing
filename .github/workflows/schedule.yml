@@ -1,10 +1,8 @@
-name: Cypress API Testing
+name: Scheduled - Cypress API Testing
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   cypress-run:

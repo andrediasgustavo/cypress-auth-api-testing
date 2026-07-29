@@ -1,0 +1,24 @@
+{
+  "createPayload": {
+    "firstname": "Andre",
+    "lastname": "Dias",
+    "totalprice": 2000,
+    "depositpaid": true,
+    "bookingdates": {
+      "checkin": "2026-07-25",
+      "checkout": "2026-07-31"
+    },
+    "additionalneeds": "Breakfast"
+  },
+  "updatePayload": {
+    "firstname": "Andre",
+    "lastname": "Dias",
+    "totalprice": 5000,
+    "depositpaid": true,
+    "bookingdates": {
+      "checkin": "2026-07-25",
+      "checkout": "2026-07-31"
+    },
+    "additionalneeds": "Breakfast"
+  }
+}

@@ -59,7 +59,7 @@ describe('update booking', () => {
             body: {
                 "firstname": "Andre",
                 "lastname": "Dias",
-                 "totalprice": 5000,
+                "totalprice": 5000,
                 "depositpaid": true,
                 "bookingdates": {
                     "checkin": "2026-07-25",
@@ -69,7 +69,53 @@ describe('update booking', () => {
             }
         }).then((response) => {
             expect(response.status).equal(200)
-            expect(response.body.totalprice).equal(5000)
+            
+            expect(response.body).to.deep.include({
+                firstname: "Andre",
+                lastname: "Dias",
+                totalprice: 5000,
+                depositpaid: true,
+                additionalneeds: "Breakfast"
+            })
+            expect(response.body.bookingdates.checkin).to.equal("2026-07-25")
+            expect(response.body.bookingdates.checkout).to.equal("2026-07-31")
+        })
+    })
+
+    it('update booking and verify persistence', () => {
+        cy.request({
+            method: 'PUT',
+            url: `https://restful-booker.herokuapp.com/booking/${bookingid}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Cookie': `token=${token}`
+            },
+            body: {
+                "firstname": "Andre",
+                "lastname": "Dias",
+                "totalprice": 8000, 
+                "depositpaid": false,
+                "bookingdates": {
+                    "checkin": "2026-08-01",
+                    "checkout": "2026-08-10"
+                },
+                "additionalneeds": "Lunch"
+            }
+        }).then((putResponse) => {
+            expect(putResponse.status).equal(200)
+            
+            cy.request({
+                method: 'GET',
+                url: `https://restful-booker.herokuapp.com/booking/${bookingid}`,
+                headers: { 'Accept': 'application/json' }
+            }).then((getResponse) => {
+                expect(getResponse.status).equal(200)
+                expect(getResponse.body.totalprice).equal(8000)
+                expect(getResponse.body.depositpaid).equal(false)
+                expect(getResponse.body.additionalneeds).equal("Lunch")
+                expect(getResponse.body.bookingdates.checkin).equal("2026-08-01")
+            })
         })
     })
 
@@ -85,7 +131,7 @@ describe('update booking', () => {
             body: {
                 "firstname": "Andre",
                 "lastname": "Dias",
-                 "totalprice": 5000,
+                "totalprice": 5000,
                 "depositpaid": true,
                 "bookingdates": {
                     "checkin": "2026-07-25",
@@ -93,6 +139,8 @@ describe('update booking', () => {
                 },
                 "additionalneeds": "Breakfast"
             }
+        }).then((response) => {
+            expect(response.status).equal(403)
         })
     })
 
@@ -109,7 +157,7 @@ describe('update booking', () => {
             body: {
                 "firstname": "Andre",
                 "lastname": "Dias",
-                 "totalprice": 5000,
+                "totalprice": 5000,
                 "depositpaid": true,
                 "bookingdates": {
                     "checkin": "2026-07-25",
@@ -117,6 +165,70 @@ describe('update booking', () => {
                 },
                 "additionalneeds": "Breakfast"
             }
+        }).then((response) => {
+            expect(response.status).equal(403)
+        })
+    })
+
+    it('update booking with missing mandatory fields', () => {
+        cy.request({
+            method: 'PUT',
+            url: `https://restful-booker.herokuapp.com/booking/${bookingid}`,
+            failOnStatusCode: false,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Cookie': `token=${token}`
+            },
+            body: {
+                "totalprice": 5000,
+                "depositpaid": true,
+                "additionalneeds": "Breakfast"
+            }
+        }).then((response) => {
+            expect(response.status).equal(400)
+        })
+    })
+
+    it('update booking with non-existent ID', () => {
+        cy.request({
+            method: 'PUT',
+            url: `https://restful-booker.herokuapp.com/booking/99999999`,
+            failOnStatusCode: false,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Cookie': `token=${token}`
+            },
+            body: {
+                "firstname": "Andre",
+                "lastname": "Dias",
+                "totalprice": 5000,
+                "depositpaid": true,
+                "bookingdates": {
+                    "checkin": "2026-07-25",
+                    "checkout": "2026-07-31"
+                },
+                "additionalneeds": "Breakfast"
+            }
+        }).then((response) => {
+            expect(response.status).to.be.oneOf([404, 405]) 
+        })
+    })
+
+    it('update booking with incorrect Content-Type', () => {
+        cy.request({
+            method: 'PUT',
+            url: `https://restful-booker.herokuapp.com/booking/${bookingid}`,
+            failOnStatusCode: false,
+            headers: {
+                'Content-Type': 'text/plain',
+                'Accept': 'application/json',
+                'Cookie': `token=${token}`
+            },
+            body: '{"firstname": "Andre", "lastname": "Dias", "totalprice": 5000, "depositpaid": true, "bookingdates": {"checkin": "2026-07-25", "checkout": "2026-07-31"}}'
+        }).then((response) => {
+            expect(response.status).to.be.oneOf([400, 415])
         })
     })
 

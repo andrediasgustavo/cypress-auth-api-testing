@@ -42,10 +42,3 @@ The project includes automated CI/CD pipelines configured via GitHub Actions. Bo
 
 * **Scheduled Pipeline**: Runs a daily health check of the API at midnight UTC using a cron schedule (`0 0 * * *`).
 
-
-**Required GitHub Secrets:**
-To run the pipelines successfully, the following repository secrets must be configured to securely pass credentials to the Cypress runner:
-
-* `CYPRESS_USERNAME`
-
-* `CYPRESS_PASSWORD`
